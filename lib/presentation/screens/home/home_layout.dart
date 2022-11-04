@@ -22,7 +22,12 @@ class HomeLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if(state is UploadGalleryImageSuccessState){
+                AppCubit.get(context). getImages();
+
+              }
+            },
             builder: (context, state) {
               return SafeArea(
                   child: Scaffold(
@@ -131,7 +136,7 @@ class HomeLayout extends StatelessWidget {
                                 ),
                               ),
                               onTap: () {
-                              AppCubit.get(context).getPostImage;
+                              AppCubit.get(context).getPostImage();
                               }),
                         ],
                       ),

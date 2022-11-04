@@ -44,7 +44,6 @@ class AppCubit extends Cubit<AppStates> {
         data: FormData.fromMap(
             {"img": MultipartFile.fromFileSync(pickedImages!.path)}))
         .then((value) {
-      getImages();
       emit(UploadGalleryImageSuccessState());
     }).catchError((error) {
       if (error is DioError) {

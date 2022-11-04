@@ -79,6 +79,7 @@ class LoginLayout extends StatelessWidget {
                                         color: Colors.white, borderRadius: BorderRadius.circular(20)),
                                     child: TextFormField(
                                       controller: emailController,
+                                        keyboardType:  TextInputType.emailAddress,
                                         decoration: const InputDecoration(
                                           hintText: 'User Name',
                                         )),
@@ -87,6 +88,8 @@ class LoginLayout extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         color: Colors.white, borderRadius: BorderRadius.circular(20)),
                                     child: TextFormField(
+                                      keyboardType: TextInputType.visiblePassword ,
+                                      obscureText: true,
                                       controller: passwordController,
                                       decoration: const InputDecoration(
                                         hintText: 'Password',
