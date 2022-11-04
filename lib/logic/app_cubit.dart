@@ -17,15 +17,13 @@ class AppCubit extends Cubit<AppStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
 
-  File? imagee;
-  var rng = Random();
 
   File? image;
   var picker = ImagePicker();
 
   Future<void> getPostImage() async {
     final pickedFile = await picker.getImage(
-      source: ImageSource.camera,
+      source: ImageSource.gallery,
     );
     if (pickedFile != null) {
       image = File(pickedFile.path);
@@ -38,77 +36,21 @@ class AppCubit extends Cubit<AppStates> {
       emit(PickImageErrorState());
     }
   }
-  //
-  // Future PickImage()async{
-  //   final image=await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   final imageTemporary=File(image!.path);
-  //
-  //   File file = new File('$imageTemporary'+ (rng.nextInt(100)).toString() +'.png');
-  //
-  //  imagee== MultipartFile.fromFileSync(image.path);
-  //   uploadGalleryImage(pickedImages: file);
-  //
-  //   emit(PickImageSuccessState());
-  //   print(file);
-  //   if (image==null) {
-  //     emit(PickImageErrorState());
-  //
-  //     return;
-  //   }
-  //
-  // }
-//   Future<File> urlToFile(String imageUrl) async {
-// // generate random number.
-//     var rng = Random();
-// // get temporary directory of device.
-//     Directory tempDir = await getTemporaryDirectory();
-// // get temporary path from temporary directory.
-//     String tempPath = tempDir.path;
-// // create a new file in temporary path with random file name.
-//     File file = new File('$tempPath'+ (rng.nextInt(100)).toString() +'.png');
-// // call http.get method and pass imageUrl into it to get response.
-//     http.Response response = await http.get(imageUrl);
-// // write bodyBytes received in response to file.
-//     await file.writeAsBytes(response.bodyBytes);
-// // now return the file which is created with random name in
-// // temporary directory and image bytes from response is written to // that file.
-//     return file;
-//   }
-  void uploadGalleryImage({File? pickedImages})
-  {
+  void uploadGalleryImage({File? pickedImages}) {
     print("object");
-    DioHelper.postData(url: UPLOADIMAGE,
+    DioHelper.postData(
+        url: UPLOADIMAGE,
         token: accessToken,
-        data:
-    {
-      'img' : pickedImages
-    })
-        .then((value){
+        data: FormData.fromMap(
+            {"img": MultipartFile.fromFileSync(pickedImages!.path)}))
+        .then((value) {
+      getImages();
       emit(UploadGalleryImageSuccessState());
-    })
-        .catchError((error){
-      if(error is DioError) {
+    }).catchError((error) {
+      if (error is DioError) {
         print(error.response);
       }
       emit(UploadGalleryImageErrorState());
-    });
-  }
-  void uploadImage(){
-    emit(UploadLoadingState());
-
-    DioHelper.postData(token: 'Bearer $accessToken',
-        url: UPLOADIMAGE,
-        data: {
-          'img':imagee
-        }
-    ).then((value) {
-      print('//////////////////////////');
-      print(value.data);
-      emit(UploadSuccessState());
-    })
-        .catchError((error){
-      print("Error in SignIn is: ${error.toString()}");
-      emit(UploadErrorState());
     });
   }
 

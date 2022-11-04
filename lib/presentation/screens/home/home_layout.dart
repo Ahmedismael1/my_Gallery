@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,182 +12,170 @@ import 'package:my_gallery/presentation/resource/assets_manager.dart';
 import 'package:my_gallery/presentation/resource/font_manager.dart';
 import 'package:my_gallery/presentation/resource/styles_manager.dart';
 import 'package:my_gallery/presentation/resource/values_manager.dart';
+import 'package:my_gallery/presentation/screens/home/home_widget.dart';
 import 'package:my_gallery/presentation/screens/login/login_layout.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HomeLayout extends StatelessWidget {
   const HomeLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => AppCubit()..getImages(),
-      child: BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
-        return SafeArea(
-            child: Scaffold(
-                body: Container(
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(ImageAssets.homeBackground),
-                  fit: BoxFit.cover)),
-          child: Padding(
-            padding: const EdgeInsets.all(AppPadding.p8),
-            child: ListView(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Welcome,\n Mina',
-                      style: getBoldStyle(
-                          color: Colors.black, fontSize: FontSize.s35),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://pps.whatsapp.net/v/t61.24694-24/294932579_736941360877280_6673647483651150354_n.jpg?ccb=11-4&oh=01_AdTiAuQHveFQ2h3Z13EUc4rR54IlU9CwRRPkTjdMNI303A&oe=6371A63F'),
-                              fit: BoxFit.fill),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: AppSize.s40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ////logout////
-                    InkWell(
-                      onTap: () {
-                        CashHelper.removeData(key: 'accessToken').then((value) {
-                          if (value) {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginLayout()),
-                                (route) => false);
-                          }
-                        });
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              SvgPicture.asset(
-                                ImageAssets.logout,
-                              ),
-                              Text(
-                                'Logout',
-                                style: getBoldStyle(
-                                    color: Colors.black,
-                                    fontSize: FontSize.s16),
-                              )
-                            ],
+    return BlocConsumer<AppCubit, AppStates>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              return SafeArea(
+                  child: Scaffold(
+                      body: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(ImageAssets.homeBackground),
+                        fit: BoxFit.cover)),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppPadding.p8),
+                  child: ListView(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Welcome,\n Mina',
+                            style: getBoldStyle(
+                                color: Colors.black, fontSize: FontSize.s35),
                           ),
-                        ),
-                      ),
-                    ),
-                    ////upload photo////
-                    InkWell(
-                      onTap: () {
-                       //  AlertDialog(
-                       //
-                       //    title:  Column(children: [
-                       //      ElevatedButton(                     // FlatButton widget is used to make a text to work like a button
-                       //        onPressed: () {},             // function used to perform after pressing the button
-                       //        child: Text('CANCEL'),
-                       //      ),
-                       //      FlatButton(
-                       //        textColor: Colors.black,
-                       //        onPressed: () {},
-                       //        child: Text('ACCEPT'),
-                       //      ),
-                       //    ],),
-                       // // Action widget which will provide the user to acknowledge the choice
-                       //
-                       //  );
-                        AppCubit.get(context).getPostImage();
-                        if(state is PickImageSuccessState){
-                          AppCubit.get(context).uploadGalleryImage(pickedImages: AppCubit.get(context).imagee);
-                        }
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              SvgPicture.asset(
-                                ImageAssets.upload,
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        'https://pps.whatsapp.net/v/t61.24694-24/294932579_736941360877280_6673647483651150354_n.jpg?ccb=11-4&oh=01_AdTiAuQHveFQ2h3Z13EUc4rR54IlU9CwRRPkTjdMNI303A&oe=6371A63F'),
+                                    fit: BoxFit.fill),
                               ),
-                              Text(
-                                'Upload',
-                                style: getBoldStyle(
-                                    color: Colors.black,
-                                    fontSize: FontSize.s16),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                (AppCubit.get(context).getImagesModel != null)?
-                Container(
-                  child: GridView.count(
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 1.0,
-                  crossAxisSpacing: 1.0,
-                  childAspectRatio: 1/1.5,
-                  children: List.generate(
-                    AppCubit.get(context).getImagesModel!.data!.images!.length,
-                        (index) => buildMyImage(index: index,
-                        context: context),
-
+                      const SizedBox(
+                        height: AppSize.s40,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ////logout////
+                          logoutUploadButton(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SvgPicture.asset(
+                                        ImageAssets.logout,
+                                      ),
+                                      Text(
+                                        'Logout',
+                                        style: getBoldStyle(
+                                            color: Colors.black,
+                                            fontSize: FontSize.s16),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                CashHelper.removeData(key: 'accessToken')
+                                    .then((value) {
+                                  if (value) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LoginLayout()),
+                                        (route) => false);
+                                  }
+                                });
+                              }),
+                          ////upload photo////
+                          logoutUploadButton(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SvgPicture.asset(
+                                        ImageAssets.upload,
+                                      ),
+                                      Text(
+                                        'Upload',
+                                        style: getBoldStyle(
+                                            color: Colors.black,
+                                            fontSize: FontSize.s16),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                              AppCubit.get(context).getPostImage;
+                              }),
+                        ],
+                      ),
+                      (AppCubit.get(context).getImagesModel != null)
+                          ? Container(
+                              child: GridView.count(
+                                shrinkWrap: true,
+                                physics: BouncingScrollPhysics(),
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 1.0,
+                                crossAxisSpacing: 1.0,
+                                childAspectRatio: 1 / 1.5,
+                                children: List.generate(
+                                  AppCubit.get(context)
+                                      .getImagesModel!
+                                      .data!
+                                      .images!
+                                      .length,
+                                  (index) => buildMyImage(
+                                      index: index, context: context),
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ],
                   ),
                 ),
-                ):Center(child: CircularProgressIndicator(),),
-
-              ],
-            ),
-          ),
-        )));
-      }),
-    );
+              )));
+            });
   }
-  Widget buildMyImage({index, context})=> Padding(
-    padding: const EdgeInsets.all(AppPadding.p20),
-    child: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage('${AppCubit.get(context).getImagesModel!.data!.images![index]}'),
-          fit: BoxFit.cover
-        ),
-        borderRadius: BorderRadius.circular(15)
-      ),
-    ),
-  );
 
+  Widget buildMyImage({index, context}) => Padding(
+        padding: const EdgeInsets.all(AppPadding.p20),
+        child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      '${AppCubit.get(context).getImagesModel!.data!.images![index]}'),
+                  fit: BoxFit.cover),
+              borderRadius: BorderRadius.circular(15)),
+        ),
+      );
 }
 
 // class RPSCustomPainter extends CustomPainter{
